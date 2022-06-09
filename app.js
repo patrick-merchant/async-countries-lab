@@ -8,7 +8,7 @@ const getCountryByName = (countryName) => {
         printCountry(item);
     })
 }
-3
+
 const printCountry = (item) => {
     const newCountry = document.createElement("p");
     const br = document.createElement("br")
@@ -25,10 +25,16 @@ const printCountry = (item) => {
 }
 
 const getAllCountries = () => {
-    fetch(`https://restcountries.com/v2/all`)
-    .then(response => response.json())
-    .then(data => {
-        data.forEach(printCountry);
+    return new Promise((resolve, reject) => {
+         setTimeout(() => {
+            fetch(`https://restcountries.com/v2/all`)
+            .then(response => response.json())
+            .then(data => {
+            data.forEach(printCountry);
+            document.getElementById("progress").replaceWith("Data loaded!");
+            resolve();
+        })
+        }, 2000)
     })
 }
 
@@ -38,7 +44,15 @@ document.getElementById("btn").onclick = function() {
 };
 
 
-window.addEventListener("load", getAllCountries);
 
-getCountryByName("Afghanistan");
 
+
+
+async function progress() {
+    await document.getElementById("progress").append("Data loading...")
+    await window.addEventListener("load", getAllCountries)
+    await getCountryByName("Afghanistan")
+    // await document.getElementById("progress").replaceWith("Data loaded!");
+}
+
+progress();
